@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Form Validation</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+</head>
+<style>
+	.form-control:focus {
+		border-color: black;
+		box-shadow: none;
+	}
+	.inValid {
+			color: red;
+		}
+		.valid {
+			color: green;
+		}
+	html, body {
+			height: 100%;
+			width:100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+</style>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 mx-auto">
+				<form class="form-group" id="registrationForm">
+					<input type="text" placeholder="Fullname" class="form-control mb-2" id="fullname">
+					<p id="nametext"></p>
+
+					<input type="email" placeholder="Email" class="form-control mb-2" id="email">
+					<p id="emailtext"></p>
+
+					<input type="password" placeholder="Password" class="form-control mb-2" id="password">
+					<p id="passtext"></p>
+
+					<input type="tel" placeholder="Contact" class="form-control mb-2" id="contact">
+					<p id="contacttext"></p>
+
+					<button type="submit" class="btn btn-success">Register</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+
+<script>
+	$(document).ready(function() {
+		let isFullnameValid = false;
+		let isEmailValid = false;
+		let isPasswordValid = false;
+		let isContactValid = false;
+
+		$("#fullname").keyup(function() {
+			let nameData = $(this).val();
+			let nameRegex = /^[A-Za-z\s]{3,}$/;
+
+			if (nameRegex.test(nameData)) {
+				isFullnameValid = true;
+				$("#nametext").html("<span class='text-success'>Validated</span>");
+			} else {
+				isFullnameValid = false;
+				$("#nametext").html("<span class='text-danger'>Name must be at least 3 characters and only contain letters.</span>");
+			}
+		});
+
+		$("#email").keyup(function() {
+			let emailData = $(this).val();
+			let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+			if (emailRegex.test(emailData)) {
+				isEmailValid = true;
+				$("#emailtext").html("<span class='text-success'>Validated</span>");
+			} else {
+				isEmailValid = false;
+				$("#emailtext").html("<span class='text-danger'>Invalid Email Format.</span>");
+			}
+		});
+
+		$("#password").keyup(function() {
+				let pwd = $(this).val();
+
+				let StrengthRegex = {
+					length: /.{10,}/,
+					lowercase: /[a-z]/,
+					uppercase: /[A-Z]/,
+					digit: /\d/,
+					specialChar: /[\W_]/ 
+				};
+
+				let isValid = true;
+				let msgs = [];
+
+				if(!StrengthRegex.length.test(pwd)){
+					isValid = false;
+					msgs.push("At least 10 characters needed");
+				}
+
+				if (!StrengthRegex.lowercase.test(pwd)) {
+					isValid = false;
+					msgs.push("At least one lowercase letter");
+				}
+
+				if (!StrengthRegex.uppercase.test(pwd)) {
+					isValid = false;
+					msgs.push("At least one uppercase letter");
+				}
+
+				if (!StrengthRegex.digit.test(pwd)) {
+					isValid = false;
+					msgs.push("At least one digit");
+				}
+
+				if (!StrengthRegex.specialChar.test(pwd)) {
+					isValid = false;
+					msgs.push("At least one special character");
+				}
+
+				if (isValid) {
+					$("#passtext").html("Strong Password").addClass("valid").removeClass("inValid");
+				} else {
+					$("#passtext").html(msgs.join("<br>")).addClass("inValid").removeClass("valid");
+				}
+			});
+		$("#contact").keyup(function() {
+			let contactData = $(this).val();
+			let contactRegex = /^[0-9]{10}$/;
+
+			if (contactRegex.test(contactData)) {
+				isContactValid = true;
+				$("#contacttext").html("<span class='text-success'>Validated </span>");
+			} else {
+				isContactValid = false;
+				$("#contacttext").html("<span class='text-danger'>Contact must be 10 digits.</span>");
+			}
+		});
+
+		$("#registrationForm").submit(function(e) {
+			if (isFullnameValid && isEmailValid && isPasswordValid && isContactValid) {
+				alert("Form Submitted Successfully");
+			} else {
+				e.preventDefault(); 
+				alert("Please fill all fields correctly before submitting.");
+			}
+		});
+	});
+</script>
+
+</body>
+</html>
